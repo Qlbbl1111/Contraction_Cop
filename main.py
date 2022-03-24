@@ -18,12 +18,16 @@ else:
 if os.path.isfile(prefixpath):
     pass
 else:
-    open(prefixpath, "w")
+    nothing = {}
+    with open(prefixpath, "w") as f:
+        json.dump(nothing, f)
     
 if os.path.isfile(deletepath):
     pass
 else:
-    open(deletepath, "w")
+    nothing = {}
+    with open(deletepath, "w") as f:
+        json.dump(nothing, f)
 
 def get_prefix(client, message):
     with open(prefixpath, 'r') as f:
@@ -90,6 +94,8 @@ async def on_guild_remove(guild):
 @bot.event
 async def on_message(message):
     if message.author == bot.user:
+        return
+    if isinstance(message.channel, discord.channel.DMChannel):
         return
     for c in contractions:
         for m in str(message.content).split():
