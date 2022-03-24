@@ -18,12 +18,12 @@ else:
 if os.path.isfile(prefixpath):
     pass
 else:
-    os.mkdir(prefixpath)
+    open(prefixpath, "w")
     
 if os.path.isfile(deletepath):
     pass
 else:
-    os.mkdir(deletepath)
+    open(deletepath, "w")
 
 def get_prefix(client, message):
     with open(prefixpath, 'r') as f:
