@@ -15,12 +15,12 @@ if os.path.isdir(os.path.join(dir, 'settings')):
 else:
     os.mkdir(os.path.join(dir, 'settings'))
     
-if os.path.isdir(prefixpath):
+if os.path.isfile(prefixpath):
     pass
 else:
     os.mkdir(prefixpath)
     
-if os.path.isdir(deletepath):
+if os.path.isfile(deletepath):
     pass
 else:
     os.mkdir(deletepath)
