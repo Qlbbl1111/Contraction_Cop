@@ -31,6 +31,11 @@ There is some setup needed but the little bit at the top of [main.py](main.py) h
 
 And that is basically it! There is not much else to say about the setup
 
+# Invite
+The bot is currently being ran on my server so if you want to add it and not have to deal with hosting it yourself<br>
+
+### <https://discord.com/api/oauth2/authorize?client_id=956357280918556753&permissions=10240&scope=bot>
+
 # Plans
 - Dynamic contraction detection
   - Instead of checking list see if it has common contraction features
