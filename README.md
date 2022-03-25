@@ -6,22 +6,22 @@ This is a discord bot that check every message sent to see if it has a contracti
 
 # Commands
 
-> - ## cc!help
->  Help is used to show a simplified version of [this](README.md#commands) in disord
+ - ## cc!help
+  Help is used to show a simplified version of [this](README.md#commands) in disord
 
 ***
 
-> - ## cc!settings
-> Settings is used to configure diffent aspects of the bot
-> - ### usage:
->   - cc!settings delete
->       - cc!settings delete on
->       - cc!settings delete off
->   - cc!settings prefix
->       - cc!settings prefix [new prefix]
-> 
-> Delete changes if the bot deletes a message with a contraction or just warns the user.<br>
-> Prefix changes the prefix of the bot, the default prefix is "cc!".
+ - ## cc!settings
+ Settings is used to configure diffent aspects of the bot
+ - ### usage:
+   - cc!settings delete
+       - cc!settings delete on
+       - cc!settings delete off
+   - cc!settings prefix
+       - cc!settings prefix [new prefix]
+ 
+ Delete changes if the bot deletes a message with a contraction or just warns the user.<br>
+ Prefix changes the prefix of the bot, the default prefix is "cc!".
 
 # Setup
 There is some setup needed but the little bit at the top of [main.py](main.py) helps make it very minimal
