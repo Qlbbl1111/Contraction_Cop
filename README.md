@@ -7,7 +7,7 @@ This is a discord bot that check every message sent to see if it has a contracti
 # Commands
 
  - ## cc!help
-  Help is used to show a simplified version of [this](#commands) in disord
+  Help is used to show a simplified version of [this](#commands) in discord
 
 ***
 
