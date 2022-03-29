@@ -96,6 +96,7 @@ async def on_message(message):
     if message.author == bot.user:
         return
     if isinstance(message.channel, discord.channel.DMChannel):
+        await message.reply(f"Hey! <@{str(message.author.id)}> that is a big no no")
         return
     for c in contractions:
         for m in str(message.content).split():
@@ -146,7 +147,7 @@ async def help(ctx):
 async def settings(ctx, setting, args):
     prefix = get_prefix(bot, ctx.message)
     
-    if setting == "prefix" and args:
+    if setting == "prefix" and args and len(args) <= 5:
         with open(prefixpath, 'r') as f:
             prefixes = json.load(f)
 
@@ -156,7 +157,10 @@ async def settings(ctx, setting, args):
             json.dump(prefixes, f, indent=4)
 
         await ctx.send(f'Prefix changed to: {args}')
-     
+        
+    elif setting == "prefix" and args and len(args) >= 5:
+        await ctx.send("Choosen prefix too long")
+                
     elif setting == "delete" and args == "on":
         
         with open(deletepath, 'r') as f:
