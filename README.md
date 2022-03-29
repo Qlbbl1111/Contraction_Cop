@@ -7,7 +7,7 @@ This is a discord bot that check every message sent to see if it has a contracti
 # Commands
 
  - ## cc!help
-  Help is used to show a simplified version of [this](README.md#commands) in disord
+  Help is used to show a simplified version of [this](#commands) in discord
 
 ***
 
@@ -30,6 +30,11 @@ There is some setup needed but the little bit at the top of [main.py](main.py) h
 2. Make sure that you only join servers when the bot is offline otherwise you have to manually input the server id and the corosponding setting<br>
 
 And that is basically it! There is not much else to say about the setup
+
+# Invite
+The bot is currently being ran on my server so if you want to add it and not have to deal with hosting it yourself<br>
+
+### <https://discord.com/api/oauth2/authorize?client_id=956357280918556753&permissions=10240&scope=bot>
 
 # Plans
 - Dynamic contraction detection
