@@ -93,7 +93,7 @@ async def on_guild_remove(guild):
 #message checker and responder for contractions
 @bot.event
 async def on_message(message):
-    if message.author == bot.user:
+    if (message.author.bot):
         return
     if isinstance(message.channel, discord.channel.DMChannel):
         await message.reply(f"Hey! <@{str(message.author.id)}> that is a big no no")
