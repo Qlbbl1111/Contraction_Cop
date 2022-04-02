@@ -13,17 +13,17 @@ else:
     os.mkdir(os.path.join(dir, 'settings'))
 
 def joinguild(guild):
-    if os.path.exists(f'{dir}/settings/{guild}.json') == True:
+    if os.path.exists(os.path.join(f'{dir}' , 'settings', f'{guild}.json')) == True:
         return
     else:
-        with open(f'{dir}/settings/{guild}.json', 'w+') as f:
+        with open(os.path.join(f'{dir}' , 'settings', f'{guild}.json'), 'w+') as f:
             json.dump({
                 "delete" : "True",
                 "prefix" : "cc!"
             }, f, indent=4)
 
 def checkfiles(guild):
-    if os.path.isdir(f'{dir}/settings/{guild}.json') == True:
+    if os.path.isdir(os.path.join(f'{dir}' , 'settings', f'{guild}.json')) == True:
         return
     else:
         joinguild(guild)
@@ -31,40 +31,40 @@ def checkfiles(guild):
 
 def get_prefix_start(client, message):
     guild = message.guild.id
-    if os.path.exists(f'{dir}/settings/{guild}.json') == True:
+    if os.path.exists(os.path.join(f'{dir}' , 'settings', f'{guild}.json')) == True:
         pass
     else:
         joinguild(guild)
         return
-    with open(f'{dir}/settings/{guild}.json', 'r') as f:
+    with open(os.path.join(f'{dir}' , 'settings', f'{guild}.json'), 'r') as f:
         x = json.load(f)
         prefix = x["prefix"]
     return prefix
 
 def get_prefix(guild):
-    with open(f'{dir}/settings/{guild}.json', 'r') as f:
+    with open(os.path.join(f'{dir}' , 'settings', f'{guild}.json'), 'r') as f:
         x = json.load(f)
         prefix = x["prefix"]
     return prefix
 
 def set_prefix(guild, prefix):
-    with open(f'{dir}/settings/{guild}.json', 'r') as f:
+    with open(os.path.join(f'{dir}' , 'settings', f'{guild}.json'), 'r') as f:
         jsonload = json.load(f)
         jsonload["prefix"] = prefix
-    with open(f'{dir}/settings/{guild}.json', 'w') as f:
+    with open(os.path.join(f'{dir}' , 'settings', f'{guild}.json'), 'w') as f:
         json.dump(jsonload, f, indent=4)
 
 def get_delete(guild):
-    with open(f'{dir}/settings/{guild}.json', 'r') as f:
+    with open(os.path.join(f'{dir}' , 'settings', f'{guild}.json'), 'r') as f:
         x = json.load(f)
         delete = x["delete"]
     return delete
 
 def set_delete(guild, delete):
-    with open(f'{dir}/settings/{guild}.json', 'r') as f:
+    with open(os.path.join(f'{dir}' , 'settings', f'{guild}.json'), 'r') as f:
         jsonload = json.load(f)
         jsonload["delete"] = delete
-    with open(f'{dir}/settings/{guild}.json', 'w') as f:
+    with open(os.path.join(f'{dir}' , 'settings', f'{guild}.json'), 'w') as f:
         json.dump(jsonload, f, indent=4)
 
 bot = commands.Bot(command_prefix=(get_prefix_start))
