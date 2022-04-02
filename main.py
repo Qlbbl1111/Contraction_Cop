@@ -6,41 +6,68 @@ dir = os.path.dirname(__file__)
 
 load_dotenv(os.path.join(dir, ".env"))
 
-prefixpath = os.path.join(dir, 'settings', 'prefix.json')
-deletepath = os.path.join(dir, 'settings', 'delete.json')
-
 #making settings folder and file if not already made
 if os.path.isdir(os.path.join(dir, 'settings')):
     pass
 else:
     os.mkdir(os.path.join(dir, 'settings'))
-    
-if os.path.isfile(prefixpath):
-    pass
-else:
-    nothing = {}
-    with open(prefixpath, "w") as f:
-        json.dump(nothing, f)
-    
-if os.path.isfile(deletepath):
-    pass
-else:
-    nothing = {}
-    with open(deletepath, "w") as f:
-        json.dump(nothing, f)
 
-def get_prefix(client, message):
-    with open(prefixpath, 'r') as f:
-        prefixes = json.load(f)
-    return prefixes[str(message.guild.id)]
+def joinguild(guild):
+    if os.path.exists(f'{dir}/settings/{guild}.json') == True:
+        return
+    else:
+        with open(f'{dir}/settings/{guild}.json', 'w') as f:
+            json.dump({
+                "delete" : "True",
+                "prefix" : "cc!"
+            }, f, indent=4)
 
-def get_delete(client, message):
-    with open(deletepath, 'r') as f:
-        deletes = json.load(f)
-    return deletes[str(message.guild.id)]
+def checkfiles(guild):
+    if os.path.isdir(f'{dir}/settings/{guild}.json') == True:
+        return
+    else:
+        joinguild(guild)
+        return
 
+def get_prefix_start(client, message):
+    guild = message.guild.id
+    if os.path.exists(f'{dir}/settings/{guild}.json') == True:
+        pass
+    else:
+        joinguild(guild)
+        return
+    with open(f'{dir}/settings/{guild}.json', 'r') as f:
+        x = json.load(f)
+        prefix = x["prefix"]
+    return prefix
 
-bot = commands.Bot(command_prefix=(get_prefix))
+def get_prefix(guild):
+    with open(f'{dir}/settings/{guild}.json', 'r') as f:
+        x = json.load(f)
+        prefix = x["prefix"]
+    return prefix
+
+def set_prefix(guild, prefix):
+    with open(f'{dir}/settings/{guild}.json', 'r') as f:
+        jsonload = json.load(f)
+        jsonload["prefix"] = prefix
+    with open(f'{dir}/settings/{guild}.json', 'w') as f:
+        json.dump(jsonload, f, indent=4)
+
+def get_delete(guild):
+    with open(f'{dir}/settings/{guild}.json', 'r') as f:
+        x = json.load(f)
+        delete = x["delete"]
+    return delete
+
+def set_delete(guild, delete):
+    with open(f'{dir}/settings/{guild}.json', 'r') as f:
+        jsonload = json.load(f)
+        jsonload["delete"] = delete
+    with open(f'{dir}/settings/{guild}.json', 'w') as f:
+        json.dump(jsonload, f, indent=4)
+
+bot = commands.Bot(command_prefix=(get_prefix_start))
 bot.remove_command("help") #makes it so my custom help command works
 
 #list of contractions
@@ -55,53 +82,21 @@ async def on_ready():
 #creates guild settings
 @bot.event
 async def on_guild_join(guild):
-    with open(prefixpath, 'r') as f:
-        prefixes = json.load(f)
-
-    prefixes[str(guild.id)] = 'cc!'
-
-    with open(prefixpath, 'w') as f:
-        json.dump(prefixes, f, indent=4)
-        
-    with open(deletepath, 'r') as f:
-        deletes = json.load(f)
-        
-    deletes[str(guild.id)] = "True"
-
-    with open(deletepath, 'w') as f:
-        json.dump(deletes, f, indent=4)
-
-#removes guild settings
-@bot.event
-async def on_guild_remove(guild):
-    with open(prefixpath, 'r') as f:
-        prefixes = json.load(f)
-
-    prefixes.pop(str(guild.id))
-
-    with open(prefixpath, 'w') as f:
-        json.dump(prefixes, f, indent=4)
-        
-    with open(deletepath, 'r') as f:
-        deletes = json.load(f)
-        
-    deletes.pop(str(guild.id))
+    joinguild(guild.id)
     
-    with open(deletepath, 'w') as f:
-        json.dump(deletes, f, indent=4)
-
 #message checker and responder for contractions
-@bot.event
+@bot.listen('on_message')
 async def on_message(message):
     if message.author == bot.user:
         return
     if isinstance(message.channel, discord.channel.DMChannel):
         await message.reply(f"Hey! <@{str(message.author.id)}> that is a big no no")
         return
+    checkfiles(message.guild.id)
     for c in contractions:
         for m in str(message.content).split():
-            if re.match(c, m, re.IGNORECASE):
-                delete = get_delete(bot, message)
+            if re.fullmatch(c, m, re.IGNORECASE):
+                delete = get_delete(message.guild.id)
                 if delete == "False":
                     await message.reply(f"Hey! <@{str(message.author.id)}> that is a big no no")
                     return
@@ -109,12 +104,11 @@ async def on_message(message):
                     await message.delete()                    
                     await message.author.send("Oops you just said a no no")
                     return
-    await bot.process_commands(message)
 
 #help command
 @bot.command()
 async def help(ctx):
-    prefix = get_prefix(bot, ctx.message)
+    prefix = get_prefix(ctx.guild.id)
     await ctx.send(content=None, embed=discord.Embed.from_dict(
     {
       "title": "Contraction Cop Help",
@@ -145,50 +139,27 @@ async def help(ctx):
 @bot.command(pass_context=True)
 @commands.has_permissions(administrator=True)
 async def settings(ctx, setting, args):
-    prefix = get_prefix(bot, ctx.message)
+    prefix = get_prefix(ctx.guild.id)
     
     if setting == "prefix" and args and len(args) <= 5:
-        with open(prefixpath, 'r') as f:
-            prefixes = json.load(f)
-
-        prefixes[str(ctx.guild.id)] = args
-
-        with open(prefixpath, 'w') as f:
-            json.dump(prefixes, f, indent=4)
-
+        set_prefix(ctx.guild.id, args)
         await ctx.send(f'Prefix changed to: {args}')
         
     elif setting == "prefix" and args and len(args) >= 5:
         await ctx.send("Choosen prefix too long")
                 
     elif setting == "delete" and args == "on":
-        
-        with open(deletepath, 'r') as f:
-            deletes = json.load(f)
-
-        deletes[str(ctx.guild.id)] = "True"
-
-        with open(deletepath, 'w') as f:
-            json.dump(deletes, f, indent=4)
-            
+        set_delete(ctx.guild.id, "True")   
         await ctx.send(f'Deleting is now: {args}')
     
     elif setting == "delete" and args == "off":
-        
-        with open(deletepath, 'r') as f:
-            deletes = json.load(f)
-
-        deletes[str(ctx.guild.id)] = "False"
-
-        with open(deletepath, 'w') as f:
-            json.dump(deletes, f, indent=4)
-            
+        set_delete(ctx.guild.id, "False")  
         await ctx.send(f'Deleting is now: {args}')
         
 #settings help message if there is no args
 @settings.error
 async def flip_error(ctx, error):
-    prefix = get_prefix(bot, ctx.message)
+    prefix = get_prefix(ctx.message.guild.id)
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send(content=None, embed=discord.Embed.from_dict({
              "title": "List Of Settings",
