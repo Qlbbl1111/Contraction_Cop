@@ -16,7 +16,7 @@ def joinguild(guild):
     if os.path.exists(f'{dir}/settings/{guild}.json') == True:
         return
     else:
-        with open(f'{dir}/settings/{guild}.json', 'w') as f:
+        with open(f'{dir}/settings/{guild}.json', 'w+') as f:
             json.dump({
                 "delete" : "True",
                 "prefix" : "cc!"
